@@ -6,7 +6,12 @@ let checks=0;
 try {
  const page = await browser.newPage({viewport:{width:1440,height:1000},reducedMotion:'reduce'});
  const errors=[];page.on('pageerror',error=>errors.push(error.message));
- await page.goto(base);await page.getByRole('heading',{name:'Small decisions. Greener futures.'}).waitFor();checks++;
+ await page.goto(base);await page.getByRole('heading',{name:'Less waste. More possibility.'}).waitFor();checks++;
+ await page.evaluate(()=>document.fonts.ready);
+ await page.screenshot({path:'/tmp/green-school-night-landing.png',fullPage:true});
+ await page.getByRole('button',{name:'Pause animation'}).click();
+ await page.getByRole('button',{name:'Resume animation'}).waitFor();
+ await page.getByRole('button',{name:'Resume animation'}).click();
  await page.getByRole('link',{name:'Explore the dashboard'}).click();
  await page.getByRole('heading',{name:'A brighter outlook starts here.'}).waitFor();
  await page.getByText('$18,450',{exact:true}).waitFor();
@@ -38,10 +43,19 @@ try {
  assert.equal(await page.getByRole('button',{name:'Open navigation'}).getAttribute('aria-expanded'),'false');checks++;
  await page.goto(`${base}/app/dashboard`);await page.getByText('$18,450',{exact:true}).waitFor();
  await page.screenshot({path:'/tmp/green-school-mobile.png',fullPage:true});
- await page.goto(base);await page.getByRole('heading',{name:'Small decisions. Greener futures.'}).waitFor();
- assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),true);checks++;
+ await page.goto(base);await page.getByRole('heading',{name:'Less waste. More possibility.'}).waitFor();
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),true);
+ await page.screenshot({path:'/tmp/green-school-night-mobile.png',fullPage:true});checks++;
  await page.setViewportSize({width:768,height:1024});await page.goto(`${base}/app/dashboard`);await page.getByText('$18,450',{exact:true}).waitFor();
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),true);checks++;
+ await page.emulateMedia({reducedMotion:'no-preference'});
+ await page.goto(base);await page.locator('canvas').waitFor();await page.waitForTimeout(250);
+ const firstFrame=await page.locator('canvas').evaluate(canvas=>canvas.toDataURL());
+ await page.waitForTimeout(200);
+ assert.notEqual(await page.locator('canvas').evaluate(canvas=>canvas.toDataURL()),firstFrame);
+ await page.getByRole('button',{name:'Pause animation'}).click();await page.waitForTimeout(100);
+ const pausedFrame=await page.locator('canvas').evaluate(canvas=>canvas.toDataURL());
+ await page.waitForTimeout(200);assert.equal(await page.locator('canvas').evaluate(canvas=>canvas.toDataURL()),pausedFrame);checks++;
  assert.deepEqual(errors,[]);checks++;
  console.log(`Passed ${checks} browser checks: landing, dashboard data and charts, reservations, all workspace routes, auth boundary, 404, mobile navigation, responsive layouts, and no browser exceptions.`);
 } finally {await browser.close();}

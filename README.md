@@ -23,7 +23,8 @@ The smoke script uses system Chromium at `/usr/bin/chromium`. Override `CHROMIUM
 
 ## What's implemented
 
-- Responsive landing page and dashboard, desktop sidebar, mobile navigation, active routes, and 404 page.
+- Night-valley landing page with original procedural canvas flowers, locally bundled Antonio/Manrope fonts, a pause control, and reduced-motion support. Inspired by the supplied Fernhollow reference; it does not use the missing original engine, sound, or assets.
+- Responsive dashboard, desktop sidebar, mobile navigation, active routes, and 404 page. The night theme is limited to the landing page.
 - Sample procurement and inventory values, recorded waste, electricity and water consumption, spending and energy charts, low-stock alerts, pending order count, and activity.
 - Available stock is usable stock minus reserved stock. Dashboard totals are school-wide demo summaries; the inventory table is a small sample subset.
 - Reusable panels, metrics, headings, loading, empty, and error components. Dashboard service errors have a retry action.
